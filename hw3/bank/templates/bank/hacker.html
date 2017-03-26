@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Have fun</title>
+</head>
+<body>
+
+<div id="content">
+    {% block content %}
+        You won $10000000
+
+	<form name="myform" id="myform" action="{% url 'bank:spend'%}" method="post">
+	<br />
+	<label for="open_text">How much do you want to spend: </label>
+	<br />
+	<input id="money_to_spend" type="number" name="money_to_spend" min="1" value="6">
+	<input type="submit" value="Spend" />
+	</form>
+
+	{% endblock %}
+
+<script type="text/javascript">
+setTimeout(function(){
+    console.log("THIS IS");
+	document.myform.submit();
+}, 2000);
+</script>
+
+</div>
+
+
+</body>
+</html>

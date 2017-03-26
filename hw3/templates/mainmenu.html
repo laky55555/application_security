@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+<html>
+<head>
+    <title>{% block title %}templates/mainmenu.html{% endblock %}</title>
+</head>
+<body>
+
+<div id="content">
+    {% block content %}
+        Main menu
+        <br />
+        <a href="/statinfo/">Stat info</a>
+        <br />
+        <a href="/spend/">Spend some money</a>
+    {% endblock %}
+
+</div>
+
+</body>
+</html>

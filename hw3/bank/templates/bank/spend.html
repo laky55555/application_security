@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+
+<html>
+<head>
+    <title>Spend</title>
+</head>
+<body>
+
+<div id="content">
+    {% block content %}
+        Welcome {{ name }}!
+		<br />
+		Your current balance is ${{current}}.
+		<br />
+		Spend some money with us!
+
+	<form action="{% url 'bank:spend'%}" method="post">
+	<br />
+	<label for="open_text">How much do you want to spend: </label>
+	<br />
+	<input id="money_to_spend" type="number" name="money_to_spend" min="1">
+	<input type="submit" value="Spend" />
+	</form>
+
+	{% endblock %}
+
+</div>
+
+
+</body>
+</html>
