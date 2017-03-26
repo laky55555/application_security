@@ -1,0 +1,22 @@
+<h1>Crypt me!</h1>
+<p><a href="/">return</a></p>
+<h3>On this site you can check difference in speed on encrypting via AES and RSA</h3>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% if times_symmetric.any%}
+	<h4>Average symmetric AES times; key length: 16, 24 and 32</h4>
+	<h5>Testing text len = {{ symmetric_len }}</h5>
+	<p>{{ times_symmetric }}</p>
+{% endif %}
+{% if times_asymmetric.any%}
+	<h4>Average asymmetric RSA times; key length: 1024, 2048 and 4096</h4>
+	<h5>Testing text len = {{ asymmetric_len }}</h5>
+	<p>{{ times_asymmetric }}</p>
+{% endif %}
+
+<form action="{% url 'second:index'%}" method="post">
+{% csrf_token %}
+<label for="open_text">Text to crypt: </label>
+<input id="open_text" type="text" name="open_text" value="{{ current_text }}">
+<input type="submit" value="Crypt" />
+</form>

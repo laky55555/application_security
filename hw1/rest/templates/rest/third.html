@@ -1,0 +1,23 @@
+<h1>Hash functions</h1>
+<p><a href="/">return</a></p>
+<h3>On this site you can check times for hash functions.</h3>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% if table%}
+	<table style="width:70%", border="1">
+		<tr>
+			<th>Hash function</th>
+			<th>Seconds pre 1000</th>
+			<th>String length</th>
+		</tr>
+		{% for time, name in table %}
+			<tr>
+				<td>{{ name }}</td>
+				<td>{{ time }}</td>
+				<td>{{ string_length }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+	</br>
+	</br>
+{% endif %}

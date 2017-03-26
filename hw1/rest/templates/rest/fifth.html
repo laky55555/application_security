@@ -1,0 +1,45 @@
+<h1>Digital signature</h1>
+<p><a href="/">return</a></p>
+<h3>On this site you can check using of RSA in crypted communication.</h3>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% if tina_message%}
+	<table style="width:70%">
+		<tr>
+			<th>Operation</th>
+			<th>Tina</th>
+			<th>Igor</th>
+		</tr>
+		<tr>
+			<td>Message</td>
+			<td>{{ tina_message }}</td>
+			<td>{{ igor_message }}</td>
+		</tr>
+		<tr>
+			<td>Message hash</td>
+			<td>{{ hash_of_tina_message }}</td>
+			<td>{{ hash_of_igor_message }}</td>
+		</tr>
+		<tr>
+			<td>Decrypted hash</td>
+			<td>{{ hash_tina_decrypted }}</td>
+			<td>{{ hash_igor_decrypted }}</td>
+		</tr>
+		<tr>
+			<td>Check signature</td>
+			<td>{{ tina_verified }}</td>
+			<td>{{ igor_verified }}</td>
+		</tr>
+	</table>
+	</br>
+	</br>
+{% endif %}
+
+<form action="{% url 'rest:fifth'%}" method="post">
+{% csrf_token %}
+<label for="open_text">Text to crypt: </label>
+<br />
+<input id="tina_message" type="text" name="tina_message" placeholder="Tina's message" value="{{ tina_message }}">
+<input id="igor_message" type="text" name="igor_message" placeholder="Igor's message" value="{{ igor_message }}">
+<input type="submit" value="Crypt" />
+</form>
