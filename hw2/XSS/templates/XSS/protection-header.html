@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+	<h1>X-XSS protectionheader</h1>
+{% endblock %}
+
+{% block content %}
+
+	<h4>In firefox X-XSS-Protection in header is ignored (no avalible protection)!</h4>
+	<h4>In chrome X-XSS-Protection works by defaut.
+		In example with reflected attack it prevented it, and in example with stored it can't protect us.
+	Using X-XSS-Protection is probably needless.</h4>
+
+{% endblock %}

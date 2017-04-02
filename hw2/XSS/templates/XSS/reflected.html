@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+	<h1>XSS reflected</h1>
+{% endblock %}
+
+{% block content %}
+
+	{% if name and security == 'secure' %}
+		<h2>Welcome {{ name }}</h2>
+	{% endif %}
+
+	{% if name and security == 'unsecure' %}
+		<h2>Welcome {{ name|safe }}</h2>
+	{% endif %}
+
+	{% if not name %}
+		<h4>Please enter your name</h4>
+	{% endif %}
+	<form action="{% url 'XSS:reflected'%}" method="get">
+		<label for="security">Try XSS</label>
+		<br />
+		<input type="radio" name="security" value="secure" checked> Secure<br>
+  		<input type="radio" name="security" value="unsecure"> Unsecure<br>
+		<label for="name">Your name:</label>
+		{% if name %}
+			<input id="name" type="text" name="name" value="{{ name }}">
+		{% else %}
+			<input id="name" type="text" name="name">
+		{% endif %}
+		<input type="submit" value="Send" />
+	</form>
+
+	<br />
+	<br />
+	<h4>Try following examples:</h4>
+	<p> Ivan <br />
+		&ltmark>Ivan&lt/mark> &ltscript>alert("This is not secure")&lt/script>
+	</p>
+
+{% endblock %}

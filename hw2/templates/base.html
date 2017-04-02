@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <title>Second HW</title>
+</head>
+
+<body>
+
+	{% block title %}{% endblock %}
+
+	<div id="sidebar">
+	    {% block sidebar %}
+			<p>Meni</p>
+	        <ul>
+	            <li><a href="/sql">SQL injection</a></li>
+	            <li><a href="/xss">Cross-site Scripting</a></li>
+	        </ul>
+	    {% endblock %}
+	</div>
+
+	<div id="options_menu">
+	    {% block options_menu %}{% endblock %}
+	</div>
+
+	<div id="content">
+	    {% block content %}{% endblock %}
+	</div>
+
+</body>
+</html>

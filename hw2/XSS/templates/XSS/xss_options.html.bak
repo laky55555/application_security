@@ -1,0 +1,9 @@
+<div id="options_menu">
+    {% block options_menu %}
+		<p>XSS options</p>
+		<ul>
+			<li><a href="reflected">Reflected XSS</a></li>
+			<li><a href="stored">Stored XSS</a></li>
+		</ul>
+	{% endblock %}
+</div>

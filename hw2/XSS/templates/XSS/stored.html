@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+	<h1>XSS stored</h1>
+{% endblock %}
+
+{% block content %}
+
+	{% if security %}
+		<h2>Welcome to comment section</h2>
+		<p>Comments:</p>
+		{% if security == 'secure' %}
+			{% for comment in comments %}
+				<p> {{ comment }} </p>
+			{% endfor %}
+		{% endif %}
+
+		{% if security == 'unsecure' %}
+			{% for comment in comments %}
+				<p> {{ comment|safe }} </p>
+			{% endfor %}
+		{% endif %}
+
+		<br />
+	{% endif %}
+
+
+	<form action="{% url 'XSS:stored'%}" method="POST">
+		{% csrf_token %}
+		<label for="comment">Write new comment:</label>
+		<input id="comment" type="text" name="comment">
+		<input type="submit" value="Save" />
+	</form>
+
+	<br />
+
+	<form action="{% url 'XSS:stored'%}" method="get">
+		<label for="security">Load comments:</label>
+		<input type="radio" name="security" value="secure" checked> Secure
+  		<input type="radio" name="security" value="unsecure"> Unsecure
+		<input type="submit" value="Load" />
+	</form>
+
+	<br />
+	<br />
+	<h4>Try following examples:</h4>
+	<p> Problematic comment &ltscript>alert("This is not secure")&lt/script> </p>
+
+{% endblock %}

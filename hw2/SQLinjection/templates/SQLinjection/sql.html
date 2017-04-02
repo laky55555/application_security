@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+	<h4>Enter key to reveal secret</h4>
+	<form action="{% url 'sql'%}" method="post">
+		{% csrf_token %}
+		<label for="security">Type of SQL query</label>
+		<br />
+		<input type="radio" name="security" value="secure" checked> Secure<br>
+  		<input type="radio" name="security" value="unsecure"> Unsecure<br>
+		<label for="secret_key">Key:</label>
+		<input id="secret_key" type="text" name="secret_key" value="{{ secret_key }}">
+		<input type="submit" value="Send" />
+	</form>
+
+	{% if secrets %}
+		<h4>Secrets:</h4>
+	{% endif %}
+	{% for secret in secrets %}
+		<p> {{ secret }} </p>
+	{% endfor %}
+
+
+	<br />
+	<br />
+	<h4>Try following examples:</h4>
+	<p> Tina <br />
+		Tina" OR "1"="1
+	</p>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block options_menu %}
+	<p>XSS options</p>
+	<ul>
+		<li><a href="reflected">Reflected XSS</a></li>
+		<li><a href="stored">Stored XSS</a></li>
+		<li><a href="/xss/dom#default=alert(document.cookie)">XSS DOM</a></li>
+		<li><a href="protection-header">Protection header</a></li>
+	</ul>
+{% endblock %}
