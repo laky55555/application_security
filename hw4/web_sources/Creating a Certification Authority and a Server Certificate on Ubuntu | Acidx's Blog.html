@@ -1,0 +1,648 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US"><head profile="http://gmpg.org/xfn/11">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>  Creating a Certification Authority and a Server Certificate on Ubuntu | Acidx's Blog</title>
+		<link rel="stylesheet" type="text/css" media="all" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/style.css">
+	<link rel="pingback" href="http://acidx.net/wordpress/xmlrpc.php">
+	<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="Acidx's Blog » Feed" href="http://acidx.net/wordpress/feed/">
+<link rel="alternate" type="application/rss+xml" title="Acidx's Blog » Comments Feed" href="http://acidx.net/wordpress/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Acidx's Blog » Creating a Certification Authority and a Server Certificate on Ubuntu Comments Feed" href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/feed/">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/acidx.net\/wordpress\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.7.3"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/wp-emoji-release.js" type="text/javascript" defer="defer"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="crayon-css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/crayon.css" type="text/css" media="all">
+<link rel="stylesheet" id="video-js-css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/video-js.css" type="text/css" media="all">
+<link rel="stylesheet" id="video-js-kg-skin-css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/kg-video-js-skin.css" type="text/css" media="all">
+<link rel="stylesheet" id="dashicons-css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/dashicons.css" type="text/css" media="all">
+<link rel="stylesheet" id="kgvid_video_styles-css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/kgvid_styles.css" type="text/css" media="all">
+<link rel="stylesheet" id="codecolorer-css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/codecolorer.css" type="text/css" media="screen">
+<link rel="stylesheet" id="simple-form-revisited-plugin-style-css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/style_003.css" type="text/css" media="screen">
+<link rel="stylesheet" id="thethe-captcha-css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/style_002.css" type="text/css" media="all">
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/jquery_002.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/jquery-migrate.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var quicktagsL10n = {"closeAllOpenTags":"Close all open tags","closeTags":"close tags","enterURL":"Enter the URL","enterImageURL":"Enter the URL of the image","enterImageDescription":"Enter a description of the image","textdirection":"text direction","toggleTextdirection":"Toggle Editor Text Direction","dfw":"Distraction-free writing mode","strong":"Bold","strongClose":"Close bold tag","em":"Italic","emClose":"Close italic tag","link":"Insert link","blockquote":"Blockquote","blockquoteClose":"Close blockquote tag","del":"Deleted text (strikethrough)","delClose":"Close deleted text tag","ins":"Inserted text","insClose":"Close inserted text tag","image":"Insert image","ul":"Bulleted list","ulClose":"Close bulleted list tag","ol":"Numbered list","olClose":"Close numbered list tag","li":"List item","liClose":"Close list item tag","code":"Code","codeClose":"Close code tag","more":"Insert Read More tag"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/quicktags.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var CrayonSyntaxSettings = {"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"http:\/\/acidx.net\/wordpress\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Click To Expand Code"};
+var CrayonTagEditorSettings = {"home_url":"http:\/\/acidx.net\/wordpress","css":"crayon-te","css_selected":"crayon-selected","code_css":"#crayon-code","url_css":"#crayon-url","url_info_css":"#crayon-te-url-info","lang_css":"#crayon-lang","title_css":"#crayon-title","mark_css":"#crayon-mark","range_css":"#crayon-range","inline_css":"crayon-inline","inline_hide_css":"crayon-hide-inline","inline_hide_only_css":"crayon-hide-inline-only","hl_css":"#crayon-highlight","switch_html":"#content-html","switch_tmce":"#content-tmce","tinymce_button_generic":".mce-btn","tinymce_button":"a.mce_crayon_tinymce,.mce-i-crayon_tinymce","tinymce_button_unique":"mce_crayon_tinymce","tinymce_highlight":"mce-active","submit_css":"#crayon-te-ok","cancel_css":"#crayon-te-cancel","content_css":"#crayon-te-content","dialog_title_css":"#crayon-te-title","submit_wrapper_css":"#crayon-te-submit-wrapper","data_value":"data-value","attr_sep":":","css_sep":"_","fallback_lang":"default","add_text":"Add Code","edit_text":"Edit Code","quicktag_text":"crayon","submit_add":"Add","submit_edit":"Save","bar":"#crayon-te-bar","bar_content":"#crayon-te-bar-content","extensions":{"scpt":"applescript","applescript":"applescript","swf":"as","fla":"as","cs":"c#","h":"c++","hh":"c++","hpp":"c++","hxx":"c++","h++":"c++","cc":"c++","cpp":"c++","cxx":"c++","c++":"c++","pas":"delphi","java":"java","class":"java","jar":"java","mel":"mel","ma":"mel","mv":"miva","mvc":"miva","mvt":"miva","m":"objc","mm":"objc","psc":"papyrus","pl":"perl","py":"python","pyw":"python","pyc":"python","pyo":"python","pyd":"python","rb":"ruby","rbx":"ruby","rhtml":"ruby","vbs":"vb"}};
+var CrayonSyntaxSettings = {"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"http:\/\/acidx.net\/wordpress\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Click To Expand Code"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/crayon.js"></script>
+<link rel="https://api.w.org/" href="http://acidx.net/wordpress/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://acidx.net/wordpress/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://acidx.net/wordpress/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="Retrieving System Information via Command Line on Windows" href="http://acidx.net/wordpress/2012/09/retrieving-system-information-via-command-line-on-windows/">
+<link rel="next" title="Getting Access To Mac OS Without A Password" href="http://acidx.net/wordpress/2012/11/getting-access-to-mac-os-without-a-password/">
+<meta name="generator" content="WordPress 4.7.3">
+<link rel="canonical" href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/">
+<link rel="shortlink" href="http://acidx.net/wordpress/?p=929">
+<link rel="alternate" type="application/json+oembed" href="http://acidx.net/wordpress/wp-json/oembed/1.0/embed?url=http%3A%2F%2Facidx.net%2Fwordpress%2F2012%2F09%2Fcreating-a-certification-authority-and-a-server-certificate-on-ubuntu%2F">
+<link rel="alternate" type="text/xml+oembed" href="http://acidx.net/wordpress/wp-json/oembed/1.0/embed?url=http%3A%2F%2Facidx.net%2Fwordpress%2F2012%2F09%2Fcreating-a-certification-authority-and-a-server-certificate-on-ubuntu%2F&amp;format=xml">
+<script>window.onload=function(){  	window.setTimeout(function(){ jQuery.ajax({  type: "POST",	  url: "/wordpress/",  data: { call__SPVC: 'call__SPVC', pid: 929 }  	});		}, 10000);  	};</script>			<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		</head>
+<body class="post-template-default single single-post postid-929 single-format-standard">
+<div id="header_wrap">
+		<div id="header">
+		<h1>
+						<a href="http://acidx.net/wordpress">Acidx's Blog</a>
+					</h1>
+		<h2>HowTos &amp; Reviews</h2>
+		<div id="menus">
+			<none class="menu"><ul>
+<li class="page_item page-item-19"><a href="http://acidx.net/wordpress/contact/">Contact</a></li>
+<li class="page_item page-item-1021"><a href="http://acidx.net/wordpress/disclaimer/">Disclaimer</a></li>
+<li class="page_item page-item-13"><a href="http://acidx.net/wordpress/about/">About</a></li>
+<li class="page_item page-item-635"><a href="http://acidx.net/wordpress/tools/">Tools</a></li>
+</ul></none>
+			<ul><li><a href="http://acidx.net/wordpress">Home</a></li></ul>
+		</div>
+		<div id="rss_search">
+			<div id="rss"><a href="http://acidx.net/wordpress/feed/" rel="nofollow" title="RSS Feed">RSS Feed</a></div>
+			<div id="search"><form id="searchform" method="get" action="http://acidx.net/wordpress/">
+<input value="type, hit enter" onfocus="if (this.value == 'type, hit enter') {this.value = '';}" onblur="if (this.value == '') {this.value = 'type, hit enter';}" size="35" maxlength="50" name="s" id="s" type="text">
+<input id="searchsubmit" value="SEARCH" type="submit">
+</form></div>
+		</div>
+	</div>
+</div>
+<div id="wrapper">
+<div id="content">
+	<div id="path">
+		<a rel="bookmark" href="http://acidx.net/wordpress">Home</a>
+					› <a href="http://acidx.net/wordpress/category/howto/">HowTo</a> ›  Creating a Certification Authority and a Server Certificate on Ubuntu			</div>
+		<div class="post_singular post-929 post type-post status-publish format-standard hentry category-howto category-linux" id="post-929">
+		<h2 class="title">Creating a Certification Authority and a Server Certificate on Ubuntu</h2>
+		<div class="post_info">
+			<span class="p_author">admin</span>
+			<span class="p_date">September 19, 2012</span>
+			<span class="p_catetory"><a href="http://acidx.net/wordpress/category/howto/" rel="category tag">HowTo</a>, <a href="http://acidx.net/wordpress/category/howto/linux/" rel="category tag">Linux</a></span>
+									<span class="p_comment p_comment_single"><a href="#comments" rel="bookmark">Leave a comment</a> (8)</span>
+		</div>
+		<div class="clear"></div>
+		<div class="entry">
+			<p>The following steps will walk you through the creation of your own
+ CA, which is necessary to sign certificates. Signed certificates can 
+then be used for SSL-protected webservers or for authentication. The 
+good thing is that you don’t have to pay any fees for self-signed 
+certificates. There is however a disadvantage: since your CA’s root 
+certificate is not publicly known, browsers will show a warning if 
+someone opens your website. The client has to install your root 
+certificate to get rid of this warning and automatically trust all 
+certificates signed by your CA.</p>
+<p>Info: This howto is based on Ubuntu 12.04 and describes a manual way 
+of creating certificates. There are also graphical solutions like TinyCA
+ which allow you to do all this without typing any commands. I roughly 
+described how to use TinyCA in <a title="Enabling SSL On Your Webserver" href="http://acidx.net/wordpress/2013/02/enabling-ssl-on-your-webserver/" target="_blank">this article</a>.</p>
+<p>&nbsp;</p>
+<h2>1. Setting Up The Certification Authority (CA)</h2>
+<p>Before you start, make sure to have openssl installed. This however should be the case by default on Ubuntu.</p>
+<p>&nbsp;</p>
+<h4>1. Preparations</h4>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="bash codecolorer"><span class="co0"># Become root</span><br>
+<span class="kw2">sudo</span> <span class="re5">-i</span><br>
+<br>
+<span class="co0"># Create a directory for the CA and switch to it</span><br>
+<span class="kw2">mkdir</span> <span class="sy0">/</span>root<span class="sy0">/</span>ca<br>
+<span class="kw3">cd</span> <span class="sy0">/</span>root<span class="sy0">/</span>ca<br>
+<br>
+<span class="co0"># Create some (necessary) directories</span><br>
+<span class="kw2">mkdir</span> newcerts certs crl private requests<br>
+<br>
+<span class="co0"># Get a copy of the standard SSL configuration</span><br>
+<span class="kw2">cp</span> <span class="sy0">/</span>etc<span class="sy0">/</span>ssl<span class="sy0">/</span>openssl.cnf .<span class="sy0">/</span>config.txt<br>
+<br>
+<span class="co0"># Create some necessary files</span><br>
+<span class="kw2">touch</span> index.txt<br>
+<span class="kw3">echo</span> <span class="st_h">'01'</span> <span class="sy0">&gt;</span> serial</div></div>
+<p>&nbsp;</p>
+<h4>2. Generate the CA’s Private Key</h4>
+<p>Now that all the files and folders are prepared, the CA’s private key can be generated:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="bash codecolorer">openssl genrsa <span class="re5">-des3</span> <span class="re5">-out</span> private<span class="sy0">/</span>cakey.pem <span class="nu0">4096</span></div></div>
+<p>The output should look like this:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="text codecolorer">root@acidx:~/ca# openssl genrsa -des3 -out private/cakey.pem 4096<br>
+Generating RSA private key, 4096 bit long modulus<br>
+............++<br>
+..................................................................................++<br>
+e is 65537 (0x10001)<br>
+Enter pass phrase for private/cakey.pem:<br>
+Verifying - Enter pass phrase for private/cakey.pem:</div></div>
+<p>&nbsp;</p>
+<h4>3. Create the CA Root Certificate</h4>
+<p>To create the certificate, enter:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="bash codecolorer">openssl req <span class="re5">-new</span> <span class="re5">-x509</span> <span class="re5">-key</span> private<span class="sy0">/</span>cakey.pem <span class="re5">-out</span> cacert.pem <span class="re5">-days</span> <span class="nu0">3650</span> -set_serial <span class="nu0">0</span></div></div>
+<p>The output should look like this:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="text codecolorer">root@acidx:~/ca# openssl req -new -x509 -key private/cakey.pem -out cacert.pem -days 3650 -set_serial 0<br>
+Enter pass phrase for private/cakey.pem:<br>
+You are about to be asked to enter information that will be incorporated<br>
+into your certificate request.<br>
+What you are about to enter is what is called a Distinguished Name or a DN.<br>
+There are quite a few fields but you can leave some blank<br>
+For some fields there will be a default value,<br>
+If you enter '.', the field will be left blank.<br>
+-----<br>
+Country Name (2 letter code) [AU]:DE<br>
+State or Province Name (full name) [Some-State]:Bremen<br>
+Locality Name (eg, city) []:Bremen<br>
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:AcidX Corporation<br>
+Organizational Unit Name (eg, section) []:.<br>
+Common Name (e.g. server FQDN or YOUR name) []:AcidX CA<br>
+Email Address []:admin@acidx.net</div></div>
+<p>&nbsp;</p>
+<h4>4. Edit the Config File</h4>
+<p>In the config.txt file the following changes are necessary:</p>
+<p>[ CA_default ] section</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="bash codecolorer"><span class="kw2">dir</span> = <span class="sy0">/</span>root<span class="sy0">/</span>ca <span class="co0"># Where everything is kept</span><br>
+default_days = <span class="nu0">3650</span> <span class="co0"># how long to certify for</span></div></div>
+<p>[ policy_match ] section</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="bash codecolorer">stateOrProvinceName = supplied<br>
+organizationName = supplied</div></div>
+<p>&nbsp;</p>
+<h2>2. Limit Access Rights</h2>
+<p>Make sure that only root can access the CA folder and especially the private key.</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="bash codecolorer"><span class="kw2">chmod</span> <span class="re5">-R</span> <span class="nu0">600</span> <span class="sy0">/</span>root<span class="sy0">/</span>ca</div></div>
+<p>&nbsp;</p>
+<h2>3. Certification Sign Request (CSR)</h2>
+<p>Now that the CA is set up, it is ready to sign certification requests. To create a CSR, type:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="bash codecolorer"><span class="kw3">cd</span> <span class="sy0">/</span>root<span class="sy0">/</span>ca<span class="sy0">/</span>requests<br>
+openssl genrsa <span class="re5">-des3</span> <span class="re5">-out</span> webserverkey.pem <span class="nu0">2048</span><br>
+openssl req <span class="re5">-new</span> <span class="re5">-key</span> webserverkey.pem <span class="re5">-out</span> webservercert.csr <span class="re5">-days</span> <span class="nu0">3650</span></div></div>
+<p>The output should look like:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="text codecolorer">Country Name (2 letter code) [AU]:DE<br>
+State or Province Name (full name) [Some-State]:Bremen<br>
+Locality Name (eg, city) []:Bremen<br>
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:AcidX Corporation<br>
+Organizational Unit Name (eg, section) []:.<br>
+Common Name (e.g. server FQDN or YOUR name) []:webserver.acidx.net<br>
+Email Address []:admin@acidx.net<br>
+Please enter the following 'extra' attributes<br>
+to be sent with your certificate request<br>
+A challenge password []:.<br>
+An optional company name []:.</div></div>
+<p>&nbsp;</p>
+<h2>4. Sign the CSR</h2>
+<p>To sign the CSR, type:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:100%;"><div class="text codecolorer">openssl ca -in webservercert.csr -out webservercert.pem -config /root/ca/config.txt</div></div>
+<p>Now you can use the webservercert.pem certificate to secure your 
+webserver. A copy of it is automatically kept in the newcerts folder. 
+The cacert.pem would be your root certificate which should be installed 
+by your clients.</p>
+					</div><!-- END entry -->
+	</div><!-- END post -->
+	<div class="post_info_b">
+		<span class="p_tag"></span>
+		<span class="p_navi"><a href="http://acidx.net/wordpress/2012/09/retrieving-system-information-via-command-line-on-windows/" rel="prev">« Previous</a> | <a href="http://acidx.net/wordpress/2012/11/getting-access-to-mac-os-without-a-password/" rel="next">Next »</a></span>
+	</div>
+
+	<!-- You can start editing here. -->
+				<h2 id="comments"><span>8 Comments.</span><span class="add_comment">[ <a href="#respond" rel="nofollow" title="Leave a comment ?">Leave a comment</a> ]</span></h2>
+			<ol class="commentlist" id="thecomments">
+					<li class="comment even thread-even depth-1" id="li-comment-214">
+	<div id="comment-214">
+		<div class="comment-author vcard">
+			<img alt="" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/b9d6f573e8cf214a58bc732f3d8fcdc5.jpeg" srcset="http://2.gravatar.com/avatar/b9d6f573e8cf214a58bc732f3d8fcdc5?s=80&amp;d=mm&amp;r=g 2x" class="avatar avatar-40 photo" height="40" width="40">			<cite class="fn">rob mckennon</cite>
+			<span class="comment-meta commentmetadata"><a href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/#comment-214">November 1, 2013 at 10:57 pm</a> </span>
+		</div>
+				<div class="comment-text">
+			<p>Thank you for this simple howto.  Using this and a cisco doc, I 
+was able to create and self-sign 2 certificates for my routers, which 
+are then using those certs to secure a vpn tunnel.</p>
+<p>Rob.</p>
+		</div>
+		<div class="reply">
+					</div>
+	</div>
+</li><!-- #comment-## -->
+<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-251">
+	<div id="comment-251">
+		<div class="comment-author vcard">
+			<img alt="" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/fac30e821d3f34290ca41991d0732ef5.jpeg" srcset="http://0.gravatar.com/avatar/fac30e821d3f34290ca41991d0732ef5?s=80&amp;d=mm&amp;r=g 2x" class="avatar avatar-40 photo" height="40" width="40">			<cite class="fn">Tweeling</cite>
+			<span class="comment-meta commentmetadata"><a href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/#comment-251">March 22, 2014 at 9:43 pm</a> </span>
+		</div>
+				<div class="comment-text">
+			<p>HI,</p>
+<p>I’m getting the following error. Do you have any idea why?</p>
+<p>Error opening Private Key tomcat.pem<br>
+3074210056:error:02001002:system library:fopen:No such file or directory:bss_file.c:398:fopen(‘tomcat.pem’,’r’)<br>
+3074210056:error:20074002:BIO routines:FILE_CTRL:system lib:bss_file.c:400:<br>
+unable to load Private Key</p>
+<p>Thanks.</p>
+		</div>
+		<div class="reply">
+					</div>
+	</div>
+</li><!-- #comment-## -->
+<li class="comment byuser comment-author-admin bypostauthor even thread-even depth-1" id="li-comment-252">
+	<div id="comment-252">
+		<div class="comment-author vcard">
+			<img alt="" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/189f17026d1191a693cdbd284b942b12.jpeg" srcset="http://1.gravatar.com/avatar/189f17026d1191a693cdbd284b942b12?s=80&amp;d=mm&amp;r=g 2x" class="avatar avatar-40 photo" height="40" width="40">			<cite class="fn">admin</cite>
+			<span class="comment-meta commentmetadata"><a href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/#comment-252">March 22, 2014 at 10:07 pm</a> </span>
+		</div>
+				<div class="comment-text">
+			<p>Which command results in that error? Are you executing the command as root?</p>
+		</div>
+		<div class="reply">
+					</div>
+	</div>
+</li><!-- #comment-## -->
+<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-285">
+	<div id="comment-285">
+		<div class="comment-author vcard">
+			<img alt="" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/203560053ce656ef68492d9323dd2bb8.jpeg" srcset="http://2.gravatar.com/avatar/203560053ce656ef68492d9323dd2bb8?s=80&amp;d=mm&amp;r=g 2x" class="avatar avatar-40 photo" height="40" width="40">			<cite class="fn">Takiman</cite>
+			<span class="comment-meta commentmetadata"><a href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/#comment-285">September 3, 2014 at 9:08 am</a> </span>
+		</div>
+				<div class="comment-text">
+			<p>Hi how do you install cacert.pem onto a client? in my situation I 
+am using WIndows, so any help with this in as much detail or if you have
+ any easy-to-follow links would be good.  Thanks.</p>
+		</div>
+		<div class="reply">
+					</div>
+	</div>
+</li><!-- #comment-## -->
+<li class="comment byuser comment-author-admin bypostauthor even thread-even depth-1" id="li-comment-286">
+	<div id="comment-286">
+		<div class="comment-author vcard">
+			<img alt="" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/189f17026d1191a693cdbd284b942b12.jpeg" srcset="http://1.gravatar.com/avatar/189f17026d1191a693cdbd284b942b12?s=80&amp;d=mm&amp;r=g 2x" class="avatar avatar-40 photo" height="40" width="40">			<cite class="fn">admin</cite>
+			<span class="comment-meta commentmetadata"><a href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/#comment-286">September 3, 2014 at 11:31 am</a> </span>
+		</div>
+				<div class="comment-text">
+			<p>On Windows 7 it can be installed as follows:<br>
+– Press [Winkey]+[R], type “mmc” and hit Enter<br>
+– Press [Ctrl]+[M] to add a new Snap-In<br>
+– Add the “Certificates” Snap-In<br>
+– Select “My User Account” if you want to install the certificate for 
+the current user only or select “Computer Account” if you want to 
+install it for all users<br>
+– In the Snap-In go to “Trusted Root Certification Authorities” –&gt; “Certificates”<br>
+– Click on menu “Action” –&gt; “All Tasks” –&gt; “Import”<br>
+– Select your cacert.pem (in the file selection dialogue you have to set the dropdown box to “All files (*.*)”)</p>
+		</div>
+		<div class="reply">
+					</div>
+	</div>
+</li><!-- #comment-## -->
+<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-350">
+	<div id="comment-350">
+		<div class="comment-author vcard">
+			<img alt="" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/e5ecaa9a874f8c906b634aaee34d1bf4.jpeg" srcset="http://2.gravatar.com/avatar/e5ecaa9a874f8c906b634aaee34d1bf4?s=80&amp;d=mm&amp;r=g 2x" class="avatar avatar-40 photo" height="40" width="40">			<cite class="fn">Ankit</cite>
+			<span class="comment-meta commentmetadata"><a href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/#comment-350">February 3, 2015 at 12:24 am</a> </span>
+		</div>
+				<div class="comment-text">
+			<p>I am getting this<br>
+###openssl ca -in webservercert.csr -out webservercert.pem -config /root/ca/config.txt</p>
+<p>Using configuration from /root/ca/config.txt<br>
+Error opening CA private key ca/private/cakey.pem<br>
+140461848409760:error:02001002:system library:fopen:No such file or directory:bss_file.c:398:fopen(‘ca/private/cakey.pem’,’r’)<br>
+140461848409760:error:20074002:BIO routines:FILE_CTRL:system lib:bss_file.c:400:</p>
+		</div>
+		<div class="reply">
+					</div>
+	</div>
+</li><!-- #comment-## -->
+<li class="comment byuser comment-author-admin bypostauthor even thread-even depth-1" id="li-comment-351">
+	<div id="comment-351">
+		<div class="comment-author vcard">
+			<img alt="" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/189f17026d1191a693cdbd284b942b12.jpeg" srcset="http://1.gravatar.com/avatar/189f17026d1191a693cdbd284b942b12?s=80&amp;d=mm&amp;r=g 2x" class="avatar avatar-40 photo" height="40" width="40">			<cite class="fn">admin</cite>
+			<span class="comment-meta commentmetadata"><a href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/#comment-351">February 3, 2015 at 8:58 am</a> </span>
+		</div>
+				<div class="comment-text">
+			<p>Is the “dir” entry in config.txt correct (should be /root/ca) and 
+does the private key exist at the expected location 
+(/root/ca/private/cakey.pem)?</p>
+		</div>
+		<div class="reply">
+					</div>
+	</div>
+</li><!-- #comment-## -->
+<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-574">
+	<div id="comment-574">
+		<div class="comment-author vcard">
+			<img alt="" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/7028ae54ca3a4e646882ab85d64a618a.jpeg" srcset="http://1.gravatar.com/avatar/7028ae54ca3a4e646882ab85d64a618a?s=80&amp;d=mm&amp;r=g 2x" class="avatar avatar-40 photo" height="40" width="40">			<cite class="fn">NR</cite>
+			<span class="comment-meta commentmetadata"><a href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/#comment-574">August 8, 2016 at 8:58 pm</a> </span>
+		</div>
+				<div class="comment-text">
+			<p>Yes, I too am seeing the same errors –<br>
+I am getting this<br>
+###openssl ca -in webservercert.csr -out webservercert.pem -config /root/ca/config.txt</p>
+<p>Using configuration from /root/ca/config.txt<br>
+Error opening CA private key ca/private/cakey.pem<br>
+140461848409760:error:02001002:system library:fopen:No such file or directory:bss_file.c:398:fopen(‘ca/private/cakey.pem’,’r’)<br>
+140461848409760:error:20074002:BIO routines:FILE_CTRL:system lib:bss_file.c:400:</p>
+<p>ANd yes, I’ve already confirmed that the  “dir” entry in config.txt 
+correct (should be /root/ca) and does the private key exist at the 
+expected location (/root/ca/private/cakey.pem)</p>
+		</div>
+		<div class="reply">
+					</div>
+	</div>
+</li><!-- #comment-## -->
+			</ol>
+					<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Comment <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://acidx.net/wordpress/2012/09/creating-a-certification-authority-and-a-server-certificate-on-ubuntu/#respond" style="display:none;"><small>Cancel reply</small></a></small></h3>			<form action="http://acidx.net/wordpress/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+				<p class="comment-form-comment"><div id="qt_comment_toolbar" class="quicktags-toolbar"><input id="qt_comment_strong" class="ed_button button button-small" aria-label="Bold" value="b" type="button"><input id="qt_comment_em" class="ed_button button button-small" aria-label="Italic" value="i" type="button"><input id="qt_comment_link" class="ed_button button button-small" aria-label="Insert link" value="link" type="button"><input id="qt_comment_block" class="ed_button button button-small" aria-label="Blockquote" value="b-quote" type="button"><input id="qt_comment_del" class="ed_button button button-small" aria-label="Deleted text (strikethrough)" value="del" type="button"><input id="qt_comment_ins" class="ed_button button button-small" aria-label="Inserted text" value="ins" type="button"><input id="qt_comment_img" class="ed_button button button-small" aria-label="Insert image" value="img" type="button"><input id="qt_comment_ul" class="ed_button button button-small" aria-label="Bulleted list" value="ul" type="button"><input id="qt_comment_ol" class="ed_button button button-small" aria-label="Numbered list" value="ol" type="button"><input id="qt_comment_li" class="ed_button button button-small" aria-label="List item" value="li" type="button"><input id="qt_comment_code" class="ed_button button button-small" aria-label="Code" value="code" type="button"><input id="qt_comment_more" class="ed_button button button-small" aria-label="Insert Read More tag" value="more" type="button"><input id="qt_comment_close" class="ed_button button button-small" title="Close all open tags" value="close tags" type="button"><a class="crayon-tag-editor-button-wrapper cboxElement" href="#crayon-te-content"><input id="qt_comment_crayon_quicktag" class="ed_button button button-small" value="crayon" type="button"></a></div><textarea id="comment" name="comment" class="comment-textarea"></textarea></p><p class="comment-form-author"><input id="author" name="author" size="30" type="text"> <label for="author"><small>NAME</small></label></p>
+<p class="comment-form-email"><input id="email" name="email" size="30" type="text"> <label for="email">EMAIL</label></p>
+<p class="comment-form-url"><input id="url" name="url" size="30" type="text"> <label for="url">Website URL</label></p>
+<p class="comment-form-captcha">
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$("#reload_captcha").click(function() {
+		
+str="http://acidx.net/wordpress/wp-content/plugins/thethe-captcha/lib/w3captcha.php?w3_count=5&amp;w3_width=100&amp;w3_height=48&amp;w3_font_size_min=32&amp;w3_font_size_max=32&amp;w3_char_angle_min=10&amp;w3_char_angle_max=10&amp;w3_char_angle_shadow=5&amp;w3_char_align=40&amp;w3_start=5&amp;w3_interval=16&amp;w3_chars=0123456789&amp;w3_noise=10&amp;w3_backg=ffffff&amp;w3_shadow=000000&amp;rand="+
+ Math.round(Math.random (0) * 1000);
+		str=str.replace(/&amp;/g,"&");
+		document.images["thethe_captcha"].src=str;
+		}) 
+	}) 
+	</script>
+	<img src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/w3captcha.png" alt="Captcha" id="thethe_captcha">
+	<img src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/reload.gif" id="reload_captcha" alt="Captcha Reload" title="Captcha Reload">
+	<br>
+	
+	<label for="captcha_input">CAPTCHA Code</label>
+	<input name="captcha_input" id="captcha_input" type="text">
+	</p><p class="form-submit"><input name="submit" id="submit" class="submit" value="SUBMIT" type="submit"> <input name="comment_post_ID" value="929" id="comment_post_ID" type="hidden">
+<input name="comment_parent" id="comment_parent" value="0" type="hidden">
+</p>			</form>
+			</div><!-- #respond -->
+		</div><!--content-->
+
+<div id="sidebar">
+
+		<!--
+	<div class="widget">
+		<h3>Advertisement</h3>
+		<div class="s_ad">
+			<div class="s_ad125">AD1 code here</div>
+			<div class="s_ad125">AD2 code here</div>
+			<div class="s_ad125">AD3 code here</div>
+			<div class="s_ad125">AD4 code here</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	-->
+
+<div id="recent-comments-2" class="widget widget_recent_comments"><h3 class="widgettitle">Recent Comments</h3><ul id="recentcomments"><li class="recentcomments"><span class="comment-author-link"><a href="http://no/" rel="external nofollow" class="url">visitor</a></span> on <a href="http://acidx.net/wordpress/2014/03/how-to-reduce-the-size-of-virtualbox-vms/#comment-604">How To Reduce The Size Of VirtualBox VMs</a></li><li class="recentcomments"><span class="comment-author-link">bobesz</span> on <a href="http://acidx.net/wordpress/2014/04/basic-openldap-installation-configuration/#comment-601">Basic OpenLDAP Installation &amp; Configuration</a></li><li class="recentcomments"><span class="comment-author-link">admin</span> on <a href="http://acidx.net/wordpress/2011/12/how-to-set-up-a-vpn-on-dd-wrt/#comment-595">How To Set Up a VPN on DD-WRT</a></li><li class="recentcomments"><span class="comment-author-link">admin</span> on <a href="http://acidx.net/wordpress/2012/07/how-to-install-an-irc-server/#comment-594">How To Install an IRC Server</a></li><li class="recentcomments"><span class="comment-author-link">Povel</span> on <a href="http://acidx.net/wordpress/2011/12/how-to-set-up-a-vpn-on-dd-wrt/#comment-592">How To Set Up a VPN on DD-WRT</a></li></ul></div><div id="categories-2" class="widget widget_categories"><h3 class="widgettitle">Categories</h3>		<ul>
+	<li class="cat-item cat-item-17"><a href="http://acidx.net/wordpress/category/review/flashlight/">Flashlight</a>
+</li>
+	<li class="cat-item cat-item-15"><a href="http://acidx.net/wordpress/category/howto/hardware/">Hardware</a>
+</li>
+	<li class="cat-item cat-item-9"><a href="http://acidx.net/wordpress/category/howto/">HowTo</a>
+</li>
+	<li class="cat-item cat-item-8"><a href="http://acidx.net/wordpress/category/information/">Information</a>
+</li>
+	<li class="cat-item cat-item-11"><a href="http://acidx.net/wordpress/category/howto/linux/">Linux</a>
+</li>
+	<li class="cat-item cat-item-12"><a href="http://acidx.net/wordpress/category/howto/mac/">Mac</a>
+</li>
+	<li class="cat-item cat-item-18"><a href="http://acidx.net/wordpress/category/raspberry/">Raspberry</a>
+</li>
+	<li class="cat-item cat-item-13"><a href="http://acidx.net/wordpress/category/review/">Review</a>
+</li>
+	<li class="cat-item cat-item-10"><a href="http://acidx.net/wordpress/category/howto/windows/">Windows</a>
+</li>
+		</ul>
+</div><div id="meta-2" class="widget widget_meta"><h3 class="widgettitle">Meta</h3>			<ul>
+						<li><a href="http://acidx.net/wordpress/wp-login.php">Log in</a></li>
+			<li><a href="http://acidx.net/wordpress/feed/">Entries <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="http://acidx.net/wordpress/comments/feed/">Comments <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="https://wordpress.org/" title="Powered by WordPress, state-of-the-art semantic personal publishing platform.">WordPress.org</a></li>			</ul>
+			</div></div></div><!--wrapper-->
+<div class="clear"></div>
+<div id="footer">
+	©&nbsp;Copyright&nbsp;2017&nbsp;Acidx's Blog	⋅&nbsp;Theme&nbsp;by&nbsp;zwwooooo&nbsp;&amp;&nbsp;<a href="http://schiy.com/">schiy</a>
+	⋅&nbsp;Powered&nbsp;by&nbsp;<a href="http://wordpress.org/">WordPress</a> 
+</div><!--footer-->
+<link rel="stylesheet" id="buttons-css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/buttons.css" type="text/css" media="all">
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/jquery.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/simple-contact-form-revisited-plugin.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/wp-embed.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var userSettings = {"url":"\/wordpress\/","uid":"0","time":"1491102576","secure":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/utils.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/editor.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/wp-a11y.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var wpLinkL10n = {"title":"Insert\/edit 
+link","update":"Update","save":"Add Link","noTitle":"(no 
+title)","noMatchesFound":"No results found.","linkSelected":"Link 
+selected.","linkInserted":"Link inserted."};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/wplink.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/core.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/widget.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/position.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/menu.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var uiAutocompleteL10n = {"noResults":"No results found.","oneResult":"1
+ result found. Use up and down arrow keys to 
+navigate.","manyResults":"%d results found. Use up and down arrow keys 
+to navigate.","itemSelected":"Item selected."};
+/* ]]> */
+</script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/autocomplete.js"></script>
+<link rel="stylesheet" type="text/css" href="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/tinymce_dashicons.css">
+		<script type="text/javascript">
+		tinyMCEPreInit = {
+			baseURL: "http://acidx.net/wordpress/wp-includes/js/tinymce",
+			suffix: ".min",
+						mceInit: 
+{'comment':{theme:"modern",skin:"lightgray",language:"en",formats:{alignleft:
+ [{selector: "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li", styles: 
+{textAlign:"left"}},{selector: "img,table,dl.wp-caption", classes: 
+"alignleft"}],aligncenter: [{selector: 
+"p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li", styles: 
+{textAlign:"center"}},{selector: "img,table,dl.wp-caption", classes: 
+"aligncenter"}],alignright: [{selector: 
+"p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li", styles: 
+{textAlign:"right"}},{selector: "img,table,dl.wp-caption", classes: 
+"alignright"}],strikethrough: {inline: 
+"del"}},relative_urls:false,remove_script_host:false,convert_urls:false,browser_spellcheck:true,fix_list_elements:true,entities:"38,amp,60,lt,62,gt",entity_encoding:"raw",keep_styles:false,cache_suffix:"wp-mce-4403-20160901",preview_styles:"font-family
+ font-size font-weight font-style text-decoration 
+text-transform",end_container_on_empty_block:true,wpeditimage_disable_captions:false,wpeditimage_html5_captions:false,plugins:"charmap,colorpicker,hr,lists,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview,wpembed,image",wp_lang_attr:"en-US",wp_shortcut_labels:{"Heading
+ 1":"access1","Heading 2":"access2","Heading 3":"access3","Heading 
+4":"access4","Heading 5":"access5","Heading 
+6":"access6","Paragraph":"access7","Blockquote":"accessQ","Underline":"metaU","Strikethrough":"accessD","Bold":"metaB","Italic":"metaI","Code":"accessX","Align
+ center":"accessC","Align right":"accessR","Align 
+left":"accessL","Justify":"accessJ","Cut":"metaX","Copy":"metaC","Paste":"metaV","Select
+ all":"metaA","Undo":"metaZ","Redo":"metaY","Bullet 
+list":"accessU","Numbered list":"accessO","Insert\/edit 
+image":"accessM","Insert\/edit link":"metaK","Remove 
+link":"accessS","Toolbar Toggle":"accessZ","Insert Read More 
+tag":"accessT","Insert Page Break tag":"accessP","Distraction-free 
+writing mode":"accessW","Keyboard 
+Shortcuts":"accessH"},external_plugins:{"crayon_tinymce":"http:\/\/acidx.net\/wordpress\/wp-content\/plugins\/crayon-syntax-highlighter\/util\/tag-editor\/crayon_tinymce.js","table":"http:\/\/acidx.net\/wordpress\/wp-content\/plugins\/wp-edit\/plugins\/table\/plugin.min.js"},content_css:"http://acidx.net/wordpress/wp-includes/css/dashicons.min.css?ver=4.7.3,http://acidx.net/wordpress/wp-includes/js/tinymce/skins/wordpress/wp-content.css?ver=4.7.3",selector:"#comment",resize:"vertical",menubar:false,wpautop:true,indent:false,toolbar1:"fontselect,fontsizeselect,bold,italic,strikethrough,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,wp_more,hr,table,spellchecker,fullscreen,wp_adv,separator,crayon_tinymce",toolbar2:"formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help",toolbar3:"",toolbar4:"",tabfocus_elements:":prev,:next",body_class:"comment
+ post-type-post post-status-publish post-format-standard 
+page-template-default 
+locale-en-us",tools:"inserttable",fontsize_formats:"6pt 8pt 10pt 12pt 
+14pt 16pt 18pt 20pt 22pt 24pt 26pt 28pt 30pt 32pt 34pt 36pt 48pt 
+72pt",extended_valid_elements:",pre[*],code[*],iframe[*]"}},
+			qtInit: 
+{'comment':{id:"comment",buttons:"strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"}},
+
+			ref: 
+{plugins:"charmap,colorpicker,hr,lists,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview,wpembed,image",theme:"modern",language:"en"},
+
+			load_ext: function(url,lang){var 
+sl=tinymce.ScriptLoader;sl.markDone(url+'/langs/'+lang+'.js');sl.markDone(url+'/langs/'+lang+'_dlg.js');}
+
+		};
+		</script>
+		<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/tinymce.js"></script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/plugin.js"></script>
+<script type="text/javascript">
+tinymce.addI18n( 'en', {"Ok":"OK","Bullet list":"Bulleted 
+list","Spellcheck":"Check Spelling","Row properties":"Table row 
+properties","Cell properties":"Table cell properties","Paste row 
+before":"Paste table row before","Paste row after":"Paste table row 
+after","Cut row":"Cut table row","Copy row":"Copy table row","Merge 
+cells":"Merge table cells","Split cell":"Split table cell","Paste is now
+ in plain text mode. Contents will now be pasted as plain text until you
+ toggle this option off.":"Paste is now in plain text mode. Contents 
+will now be pasted as plain text until you toggle this option off.\n\nIf
+ you\u2019re looking to paste rich content from Microsoft Word, try 
+turning this option off. The editor will clean up text pasted from Word 
+automatically.","Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 
+for toolbar. Press ALT-0 for help":"Rich Text Area. Press Alt-Shift-H 
+for help.","You have unsaved changes are you sure you want to navigate 
+away?":"The changes you made will be lost if you navigate away from this
+ page.","Your browser doesn't support direct access to the clipboard. 
+Please use the Ctrl+X\/C\/V keyboard shortcuts instead.":"Your browser 
+does not support direct access to the clipboard. Please use keyboard 
+shortcuts or your browser\u2019s edit menu instead.","Edit ":"Edit"});
+tinymce.ScriptLoader.markDone( 
+'http://acidx.net/wordpress/wp-includes/js/tinymce/langs/en.js' );
+</script>
+<script type="text/javascript" src="Creating%20a%20Certification%20Authority%20and%20a%20Server%20Certificate%20on%20Ubuntu%20%7C%20Acidx%27s%20Blog_files/wp-langs-en.js"></script>
+		<script type="text/javascript">
+		
+tinyMCEPreInit.load_ext("http://acidx.net/wordpress/wp-content/plugins/crayon-syntax-highlighter/util/tag-editor",
+ "en");
+tinymce.PluginManager.load("crayon_tinymce", 
+"http://acidx.net/wordpress/wp-content/plugins/crayon-syntax-highlighter/util/tag-editor/crayon_tinymce.js");
+tinyMCEPreInit.load_ext("http://acidx.net/wordpress/wp-content/plugins/wp-edit/plugins/table",
+ "en");
+tinymce.PluginManager.load("table", 
+"http://acidx.net/wordpress/wp-content/plugins/wp-edit/plugins/table/plugin.min.js");
+
+var
+ ajaxurl = "/wordpress/wp-admin/admin-ajax.php";
+		( function() {
+			var init, id, $wrap;
+
+			if ( typeof tinymce !== 'undefined' ) {
+				for ( id in tinyMCEPreInit.mceInit ) {
+					init = tinyMCEPreInit.mceInit[id];
+					$wrap = tinymce.$( '#wp-' + id + '-wrap' );
+
+					if ( ( $wrap.hasClass( 'tmce-active' ) || ! 
+tinyMCEPreInit.qtInit.hasOwnProperty( id ) ) && ! init.wp_skip_init ) {
+						tinymce.init( init );
+
+						if ( ! window.wpActiveEditor ) {
+							window.wpActiveEditor = id;
+						}
+					}
+				}
+			}
+
+			if ( typeof quicktags !== 'undefined' ) {
+				for ( id in tinyMCEPreInit.qtInit ) {
+					quicktags( tinyMCEPreInit.qtInit[id] );
+
+					if ( ! window.wpActiveEditor ) {
+						window.wpActiveEditor = id;
+					}
+				}
+			}
+		}());
+		</script>
+				<div id="wp-link-backdrop" style="display: none"></div>
+		<div id="wp-link-wrap" class="wp-core-ui" style="display: none" role="dialog" aria-labelledby="link-modal-title">
+		<form id="wp-link" tabindex="-1">
+		<input id="_ajax_linking_nonce" name="_ajax_linking_nonce" value="6d245fc7a4" type="hidden">		<h1 id="link-modal-title">Insert/edit link</h1>
+		<button type="button" id="wp-link-close"><span class="screen-reader-text">Close</span></button>
+		<div id="link-selector">
+			<div id="link-options">
+				<p class="howto" id="wplink-enter-url">Enter the destination URL</p>
+				<div>
+					<label><span>URL</span>
+					<input id="wp-link-url" aria-describedby="wplink-enter-url" type="text"></label>
+				</div>
+				<div class="wp-link-text-field">
+					<label><span>Link Text</span>
+					<input id="wp-link-text" type="text"></label>
+				</div>
+				<div class="link-target">
+					<label><span></span>
+					<input id="wp-link-target" type="checkbox"> Open link in a new tab</label>
+				</div>
+			</div>
+			<p class="howto" id="wplink-link-existing-content">Or link to existing content</p>
+			<div id="search-panel">
+				<div class="link-search-wrapper">
+					<label>
+						<span class="search-label">Search</span>
+						<input id="wp-link-search" class="link-search-field" autocomplete="off" aria-describedby="wplink-link-existing-content" type="search">
+						<span class="spinner"></span>
+					</label>
+				</div>
+				<div id="search-results" class="query-results" tabindex="0">
+					<ul></ul>
+					<div class="river-waiting">
+						<span class="spinner"></span>
+					</div>
+				</div>
+				<div id="most-recent-results" class="query-results" tabindex="0">
+					<div class="query-notice" id="query-notice-message">
+						<em class="query-notice-default">No search term specified. Showing recent items.</em>
+						<em class="query-notice-hint screen-reader-text">Search or use up and down arrow keys to select an item.</em>
+					</div>
+					<ul></ul>
+					<div class="river-waiting">
+						<span class="spinner"></span>
+					</div>
+ 				</div>
+ 			</div>
+		</div>
+		<div class="submitbox">
+			<div id="wp-link-cancel">
+				<button type="button" class="button">Cancel</button>
+			</div>
+			<div id="wp-link-update">
+				<input value="Add Link" class="button button-primary" id="wp-link-submit" name="wp-link-submit" type="submit">
+			</div>
+		</div>
+		</form>
+		</div>
+		
+<div id="cboxOverlay" style="display: none;"></div><div id="colorbox" class="" role="dialog" tabindex="-1" style="display: none;"><div id="cboxWrapper"><div><div id="cboxTopLeft" style="float: left;"></div><div id="cboxTopCenter" style="float: left;"></div><div id="cboxTopRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxMiddleLeft" style="float: left;"></div><div id="cboxContent" style="float: left;"><div id="cboxTitle" style="float: left;"></div><div id="cboxCurrent" style="float: left;"></div><button type="button" id="cboxPrevious"></button><button type="button" id="cboxNext"></button><button id="cboxSlideshow"></button><div id="cboxLoadingOverlay" style="float: left;"></div><div id="cboxLoadingGraphic" style="float: left;"></div></div><div id="cboxMiddleRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxBottomLeft" style="float: left;"></div><div id="cboxBottomCenter" style="float: left;"></div><div id="cboxBottomRight" style="float: left;"></div></div></div><div style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div></div><div id="wp-a11y-speak-polite" aria-live="polite" aria-relevant="additions text" aria-atomic="true" class="screen-reader-text wp-a11y-speak-region"></div><div id="wp-a11y-speak-assertive" aria-live="assertive" aria-relevant="additions text" aria-atomic="true" class="screen-reader-text wp-a11y-speak-region"></div></body></html>
