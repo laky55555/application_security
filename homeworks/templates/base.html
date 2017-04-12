@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <title>Application security</title>
+</head>
+
+<body>
+
+    <h1 id="page_title">{{ page_title }}</h1>
+
+	<nav>
+		<a href="/hw4/">HW 4</a> |
+		<a href="/hw5/">HW 5</a>
+	</nav>
+	<br />
+
+
+	<div id="sidebar">
+	    {% block sidebar %}
+	    {% endblock %}
+	</div>
+
+	<div id="options_menu">
+	    {% block options_menu %}{% endblock %}
+	</div>
+
+	<div id="content">
+	    {% block content %} {{ content }} {% endblock %}
+	</div>
+
+</body>
+</html>

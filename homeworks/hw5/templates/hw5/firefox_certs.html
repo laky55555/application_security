@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h4>Certificates</h4>
+	{% for name, list in zipped %}
+		<h4>{{ name }}</h4>
+		{% for info in list %}
+			<p>{{ info }}</p>
+		{% endfor %}
+	{% endfor %}
+	</br>
+{% endblock %}

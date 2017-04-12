@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h4>Certificates</h4>
+	<table style="width:70%", border="1">
+		<tr>
+			<th>Country</th>
+			<th>State</th>
+			<th>Organization</th>
+			<th>Organizational Unit</th>
+			<th>Common Name</th>
+			<th>Email Address</th>
+			<th>Signature algorithm</th>
+		</tr>
+		{% for list in cert_info %}
+			<tr>
+				{% for info in list %}
+				<td>{{ info }}</td>
+				{% endfor %}
+			</tr>
+		{% endfor %}
+	</table>
+	</br>
+{% endblock %}

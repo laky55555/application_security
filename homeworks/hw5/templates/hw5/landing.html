@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{{ content }}
+	<h4>First problem</h4>
+	<ul>
+        <li><a href="read_local">Read and print certificate from a local file.</a></li>
+        <li><a href="read_central">Read and print certificate from some central repository (e.g. Certificate Store in Windows).</a></li>
+        <li><a href="encrypt_decrypt">Encrypt and decrypt using the obtained certificate and the corresponding private key.</a></li>
+    </ul>
+	<h4>Second problem</h4>
+	<ul>
+		<li>Start LDAP server. Create several accounts, protect an access to accounts based on at least 2 security groups.</li>
+        <li>Connects to the server.</li>
+        <li><a href="authenticate_user">Authenticates a users.</a></li>
+        <li><a href="search_user">Searches at least 4 attributes of the user.</a></li>
+    </ul>
+	<p>[Note] If you do that without applying an encrypted channel, use sniffer to see the transmission.</p>
+{% endblock %}

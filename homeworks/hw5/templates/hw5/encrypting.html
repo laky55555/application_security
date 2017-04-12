@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h4>Loading keys and encrypting message.</h4>
+	<table style="width:70%", border="1">
+		<tr>
+			<th>Step</th>
+			<th>Result</th>
+		</tr>
+		{% for a, b in data %}
+		<tr>
+			<td>{{ a }}</td>
+			<td>{{ b }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	</br>
+{% endblock %}
