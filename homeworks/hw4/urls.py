@@ -20,4 +20,6 @@ from . import views
 app_name = 'hw4'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^ca_certificates/$', views.ca_certificates, name='ca_certificates'),
+    url(r'^deploy/$', views.deploy, name='deploy'),
 ]
