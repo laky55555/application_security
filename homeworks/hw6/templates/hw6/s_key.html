@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	{% if user.is_authenticated %}
+        <p>Welcome {{ user.username }} !!!</p>
+		<a href="logout">Logout</a><br />
+	{% else %}
+		<p>Login or create new account!</p>
+		<div style="width: 100%;">
+   			<div style="float:left; width: 50%">
+	   			{% include "login.html" %}
+			</div>
+   			<div style="float:left;">
+	   			{% include "register.html" %}
+   			</div>
+		</div>
+		<div style="clear:both"></div>
+    {% endif %}
+	<br />
+
+{% endblock %}

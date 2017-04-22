@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<p>{{ content }}</p>
+    <table style="width:70%", border="1">
+        <tr>
+            <th>Name</th>
+            <th>Time</th>
+            <th>Comment</th>
+        </tr>
+        {% for comment in blog %}
+        <tr>
+            <td>{{ comment.name }}</td>
+            <td>{{ comment.timestamp }}</td>
+            <td>{{ comment.text }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br />
+    <br />
+    <form action="{% url 'hw6:captcha'%}" method="POST">
+		{% csrf_token %}
+        <label for="name">Enter new comment:</label>
+        <input id="name" name="name" type="text" placeholder="name" size="3">
+		<input id="comment" name="comment" type="text" placeholder="comment" size="18">
+		<input type="submit" value="Save" />
+        <br />
+		{{ captcha }}
+	</form>
+
+{% endblock %}

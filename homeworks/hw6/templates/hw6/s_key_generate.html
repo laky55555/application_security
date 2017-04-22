@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<p>{{ content }}</p>
+    <table style="width:70%", border="1">
+        <tr>
+            <th>No.</th>
+            <th>Text</th>
+            <th>Hash</th>
+        </tr>
+        {% for key, hash in keys %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ key }}</td>
+            <td>{{ hash }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+	<br />
+	<br />
+
+    <form action="{% url 'hw6:s_key_generate'%}" method="POST">
+		{% csrf_token %}
+        <label for="name">Enter new keyword:</label>
+        <input id="keyword" name="keyword" type="text" placeholder="keyword" size="3">
+		<input id="number" name="number" type="number" min="2" placeholder="10" max="20">
+		<input type="submit" value="Save" />
+	</form>
+
+{% endblock %}
