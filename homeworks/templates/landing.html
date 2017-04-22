@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{% if content%}
+		<p>This homework is about <b>{{ content }}</b>.</p>
+	{% endif %}
+	<ol>
+	{% for problem in problems %}
+		<li>problem:</li>
+		<ul>
+		{% for url, details in problem %}
+			{% if url %}
+				<li><a href="{{ url }}">{{ details }}</a></li>
+			{% else %}
+				<li>{{ details }}</li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+	{% endfor %}
+	</ol>
+
+{% endblock %}

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from .settings_secrets import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +21,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '$b@b5pbqpjgf17b=y-8h)w&3vb_$=o+u6h8i^la&u8^epy5poo'
+# SECRET_KEY = '$b@b5pbqpjgf17b=y-8h)w&3vb_$=o+u6h8i^la&u8^epy5poo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'homework.mutiny.codes']
+ALLOWED_HOSTS = ['127.0.0.1', 'homework.mutiny.codes', 'localhost', '156.17.150.198']
 
 
 # Application definition
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hw4',
     'hw5',
+    'hw6',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -121,4 +124,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+# STATIC_ROOT = BASE_DIR
+# STATICFILES_DIRS = ('static',)
+
+
+#HW6
+NOCAPTCHA = True
+
+AUTHENTICATION_BACKENDS = (
+    'hw6.s_key_auth.S_KEY_backend',
+    'django.contrib.auth.backends.ModelBackend',
+)

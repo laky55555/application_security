@@ -24,4 +24,6 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^hw4/', include('hw4.urls')),
     url(r'^hw5/', include('hw5.urls')),
+    url(r'^hw6/', include('hw6.urls')),
+    url(r'^.*/$',  views.home, name='home'),
 ]
