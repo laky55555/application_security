@@ -1,4 +1,4 @@
-"""hw4 URL Configuration
+"""hw5 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
@@ -16,6 +16,8 @@ Including another URLconf
 
 from django.conf.urls import url, include
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 app_name = 'hw5'
 urlpatterns = [
@@ -23,4 +25,7 @@ urlpatterns = [
     url(r'^read_local', views.read_local, name='read_local'),
     url(r'^read_central', views.read_central, name='read_central'),
     url(r'^encrypt_decrypt', views.encrypt_decrypt, name='encrypt_decrypt'),
+    url(r'^authenticate_user', views.authenticate_user, name='authenticate_user'),
+    url(r'^search_user', views.search_user, name='search_user'),
+    url(r'^sniffer', views.sniffer, name='sniffer'),
 ]

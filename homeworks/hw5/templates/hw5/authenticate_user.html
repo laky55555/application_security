@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+	{% if correct == 1 %}
+        <p>Welcome {{ message.cn|first }} !!!</p>
+        <p>Your login credentials were correct.</p>
+	{% elif correct == -1 %}
+		<p>Your login were not correct.</p>
+	{% endif %}
+	<br />
+
+	<p>Try login with LDAP credentials!</p>
+		{% include "login.html" %}
+	<br />
+	<p>{{ hint }}</p>
+
+{% endblock %}
