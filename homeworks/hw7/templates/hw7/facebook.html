@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{% if providers %}
+		<div>Currently logged in with:
+		<b>{{ providers|unordered_list }}</b></div>
+	{% endif %}
+
+	<br />
+	<br />
+
+	{% if 'facebook' in providers %}
+		<form action="{% url 'hw7:facebook'%}" method="POST">
+			{% csrf_token %}
+			<input type="radio" name="usage" value="taggable_friends"> Friend list
+			<input type="radio" name="usage" value="albums"> My albums
+			<input type="radio" name="usage" value="posts"> Latest posts
+			<input type="submit" value="Load" />
+			<br />
+		</form>
+	{% else %}
+		<p>You are not loged in in facebook. To use this API please log in first.</p>
+		<a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
+	{% endif %}
+
+	<br />
+
+	{% if friend_list %}
+	<table border="1">
+		<tr>
+			<th>Picture</th>
+			<th>Name</th>
+		</tr>
+		{% for element in friend_list %}
+		<tr>
+			<td><img src="{{element.picture.data.url}}" /></td>
+			<td>{{ element.name }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% endif %}
+
+	{% if my_albums %}
+	<table border="1">
+		<tr>
+			<th>Cover picture</th>
+			<th>Picture number</th>
+			<th>Name</th>
+		</tr>
+		{% for element in my_albums %}
+		<tr>
+			<td><img src="{{element.picture.data.url}}" /></td>
+			<td>{{ element.count }}</td>
+			<td><a href="{{ element.link }}">{{ element.name }}</a></td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% endif %}
+
+	{% if latest_posts %}
+	<table border="1">
+		<tr>
+			<th>Cover picture</th>
+			<th>Picture number</th>
+			<th>Name</th>
+		</tr>
+		{% for element in latest_posts %}
+		{% if element.picture and element.message %}
+		<tr>
+			<td><img src="{{element.picture}}" /></td>
+			<td>{{ element.created_time }}</td>
+			<td><a href="{{ element.permalink_url }}">{{ element.message }}</a></td>
+		</tr>
+		{% endif %}
+		{% endfor %}
+	</table>
+	{% endif %}
+
+	{% if next %}
+		<form action="{% url 'hw7:facebook'%}" method="POST">
+			{% csrf_token %}
+			<input type="hidden" value="{{ next }}" name="next_page" />
+			<input type="submit" value="Load next page" />
+			<br />
+		</form>
+	{% endif %}
+
+
+
+{% endblock %}

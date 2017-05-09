@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'hw5',
     'hw6',
     'captcha',
+    'hw7',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -134,4 +138,11 @@ NOCAPTCHA = True
 AUTHENTICATION_BACKENDS = (
     'hw6.s_key_auth.S_KEY_backend',
     'django.contrib.auth.backends.ModelBackend',
+    # homework 7 oauth2 via social_core api
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.slack.SlackOAuth2',
+
 )
+
+from .settings_oauth2 import *

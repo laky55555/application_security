@@ -17,9 +17,14 @@
 		{% endif %} -->
 		<a href="{% url 'hw4:index' %}">HW 4</a> |
 		<a href="{% url 'hw5:index' %}">HW 5</a> |
-		<a href="{% url 'hw6:index' %}">HW 6</a>
+		<a href="{% url 'hw6:index' %}">HW 6</a> |
+		<a href="{% url 'hw7:index' %}">HW 7</a>
 	</nav>
 
+	<br />
+	{% if user.is_authenticated %}
+	<p> Loged in as: {{ user }} </p>
+	{% endif %}
 
 	<div id="sidebar">
 	    {% block sidebar %}

@@ -90,3 +90,5 @@ ENV/
 
 homeworks/homeworks/settings_secrets.py
 homeworks/homeworksenv
+homeworks/homeworks/settings_*
+*sqlite3*
