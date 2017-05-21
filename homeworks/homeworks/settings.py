@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'captcha',
     'hw7',
     'social_django',
+    'hw8',
 ]
 
 MIDDLEWARE = [

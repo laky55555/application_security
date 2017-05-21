@@ -1,4 +1,4 @@
-"""hw4 URL Configuration
+"""hw8 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
@@ -15,19 +15,10 @@ Including another URLconf
 """
 
 from django.conf.urls import url, include
-from django.contrib import admin
 from . import views
 
-
+app_name = 'hw8'
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
-    url(r'^logout/$', views.logout, name='logout'),
-    url(r'^hw4/', include('hw4.urls')),
-    url(r'^hw5/', include('hw5.urls')),
-    url(r'^hw6/', include('hw6.urls')),
-    url(r'^hw7/', include('hw7.urls')),
-    url('', include('social_django.urls', namespace='social')),
-    url(r'^hw8/', include('hw8.urls')),
-    url(r'^.*/$',  views.home, name='home'),
+    url(r'^.well-known/webfinger', views.index, name='index'),
 ]
