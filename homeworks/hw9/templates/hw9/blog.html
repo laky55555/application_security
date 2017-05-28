@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<p>{{ content }}</p>
+	<form action="{% url 'hw9:blog'%}" method="POST">
+		{% csrf_token %}
+	    <table style="width:70%", border="1">
+	        <tr>
+	            <th>Name</th>
+	            <th>Time</th>
+	            <th>Comment</th>
+				{% if perms.hw9.modifiy_post or perms.hw9.delete_post%}
+	            	<th>Edit</th>
+				{% endif %}
+	        </tr>
+	        {% for comment in blog %}
+	        <tr>
+	            <td>{{ comment.name }}</td>
+	            <td>{{ comment.timestamp }}</td>
+	            <td>{{ comment.text }}</td>
+				{% if perms.hw9.modifiy_post or perms.hw9.delete_post%}
+					<th><input type="radio" name="edit" value="{{ comment.id }}"></th>
+				{% endif %}
+	        </tr>
+	        {% endfor %}
+	    </table>
+
+	    <br />
+	    <br />
+		{% if perms.hw9.modifiy_post %}
+			<label for="comment_modify">Modify:</label>
+			<input id="comment_modify" name="comment_modify" type="text" placeholder="Modify comment" size="18">
+			<input type="submit" name="action" value="Modify" />
+		{% endif %}
+		{% if perms.hw9.delete_post %}
+			<label for="delete">Delete selected</label>
+			<input type="submit" id="delete" name="action" value="Delete" />
+		{% endif %}
+		{% if perms.hw9.create_post %}
+			<label for="comment">Enter new comment:</label>
+			<input id="comment" name="comment" type="text" placeholder="comment" size="18">
+			<input type="submit" name="action" value="Save" />
+		{% endif %}
+        <br />
+	</form>
+
+	<p>Permissions are: {{ permissions|unordered_list }}</p>
+
+{% endblock %}

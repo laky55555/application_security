@@ -23,6 +23,10 @@
         </p>
     {% endif %}
 
+    {% for permission in permissions %}
+        <input type="checkbox" name="permissions" value="{{ permission }}">{{ permission }}<br />
+    {% endfor %}
+    <br />
     <input type="submit" value="Register"
            class="btn btn-primary pull-right" />
     <input type="hidden" name="next" value="{{ next }}" />

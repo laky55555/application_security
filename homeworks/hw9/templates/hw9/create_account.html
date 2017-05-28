@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<p>Login or create new account!</p>
+	<div style="width: 100%;">
+			<div style="float:left; width: 50%">
+   			{% include "login.html" %}
+		</div>
+			<div style="float:left;">
+   			{% include "register.html" %}
+			</div>
+	</div>
+	<div style="clear:both"></div>
+	<br />
+
+{% endblock %}
