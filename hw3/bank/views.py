@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.template import Context, loader, RequestContext
 from django.shortcuts import render_to_response, render
 from django.template  import *
-
+import ldap
 
 from bank.models import Money
 

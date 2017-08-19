@@ -6,3 +6,6 @@ def index(request):
 
 def test(request):
     return HttpResponse("Hello, world. You are at very safe page!")
+
+def loged(request):
+    return HttpResponse("You are logged in!")
