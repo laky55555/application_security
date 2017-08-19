@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from hw9.models import BlogHW9 as Blog
+from hw9.models import BlogColumnEncryptHW9 as Blog
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -28,14 +28,13 @@ def login_user(request):
     return False
 
 def set_permissions(user, permissions):
-    if 'Add comments' in permissions:
-        user.user_permissions.add(Permission.objects.get(codename='create_post'))
+    if 'Delete comments' in permissions:
+        user.groups.add(Group.objects.get(name='hw9_moderator'))
     elif 'Modify comments' in permissions:
         user.user_permissions.add(Permission.objects.get(codename='create_post'))
         user.user_permissions.add(Permission.objects.get(codename='modifiy_post'))
-    elif 'Delete comments' in permissions:
-        user.groups.add(Group.objects.get(name='hw9_moderator'))
-
+    elif 'Add comments' in permissions:
+        user.user_permissions.add(Permission.objects.get(codename='create_post'))
 def new_user(request):
     username = request.POST['username']
     password = request.POST['password']
@@ -63,7 +62,7 @@ def accounts(request):
         elif(request.POST.get('type') == 'register'):
             register_error = new_user(request)
     return render(request, 'hw9/create_account.html', {'page_title': page_title,
-                            'login_error': login_error, 'register_error': register_error})
+                            'login_error': login_error, 'register_error': register_error, 'permissions': permissions})
 
 def blog(request):
     page_title = "Very fancy forum:"

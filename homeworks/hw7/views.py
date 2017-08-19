@@ -32,7 +32,8 @@ def login(request):
 def get_data_from_facebook(url, token):
     response = requests.get(url, params={'access_token': token}).json()
     data = response.get('data')
-    next = response.get('paging').get('next')
+    # next = response.get('paging').get('next')
+    next = data
     return (data, next)
 
 def facebook(request):
